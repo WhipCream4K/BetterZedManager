@@ -7,6 +7,7 @@ local BZM_Utils         = require("BZM_Utils")
 local fakeDeadSync      = require("BZM_ClientFakeDeadSync")
 local sharedData        = require("BZM_ClientSharedData")
 local zombieQuerier     = require("BZM_ClientQueryZombie")
+local zombieSync        = require("BZM_ClientZombieSync")
 
 -- variables stack
 
@@ -21,7 +22,8 @@ local function ServerToClient(module,command,args)
         if command == BZM_Commands.UpdateZombies then
             
             -- UpdateClientZombies(args)
-            sharedData.UpdateMemoryFromServer(args)
+            sharedData.UpdeadMemoryFirstFrame(args)
+            zombieSync.UpdateClientZombies(args)
 
         elseif command == BZM_Commands.QueryClientZombies then
 
@@ -44,9 +46,23 @@ local function ServerToClient(module,command,args)
             
             local myOnlineID = sharedData.GetPlayer():getOnlineID() or GetPlayer(sharedData.ThisPlayerIndex):getOnlineID()
             if myOnlineID == args[BZM_Enums.OnlineArgs.PlayerID] then
+                
                 BZM_Utils.DebugPrintWithBanner("Get information from previous zombie memo",true)
-                sharedData.UpdeadMemoryFirstFrame(args[BZM_Enums.OnlineArgs.Memo])
-                fakeDeadSync.SyncFakeDeadsFirstFrame()
+
+                local isTableValid = false
+                for _, _ in pairs(args[BZM_Enums.OnlineArgs.Memo]) do
+                    isTableValid = true
+                    break
+                end
+                
+                if isTableValid then
+                    sharedData.UpdeadMemoryFirstFrame(args[BZM_Enums.OnlineArgs.Memo])
+            
+                    -- fakeDeadSync.SyncFakeDeadsFirstFrame()
+                    -- make the client update the game after the first render
+                    Events.OnPostRender.Add(fakeDeadSync.SyncFakeDeadsFirstFrame)
+                end
+
             end
 
         end

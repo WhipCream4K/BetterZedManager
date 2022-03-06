@@ -1,0 +1,2 @@
+1. Player enters server ask server to sync data
+2. After finishes syncing data on after everything get loaded iterate through zombies in current cell sees if any is fake deads and adjusted

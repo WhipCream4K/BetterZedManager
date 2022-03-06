@@ -21,7 +21,8 @@ local function BroadcastSyncFakeDeads(playerOnlineID,zombieArgs)
     end
     
     local onlineData = {}
-    onlineData[BZM_Enums.OnlineArgs.PlayerID] = playerOnlineID
+    onlineData[BZM_Enums
+    .OnlineArgs.PlayerID] = playerOnlineID
     onlineData[BZM_Enums.OnlineArgs.ZombieID] = zombieArgs[BZM_Enums.OnlineArgs.ZombieID]
 
     -- local posX = zombieArgs["posX"]
@@ -59,6 +60,15 @@ local function OnClientToServer(module,command,player,args)
                 onlineArgs[BZM_Enums.OnlineArgs.PlayerID] = player:getOnlineID()
                 onlineArgs[BZM_Enums.OnlineArgs.Memo] = serverZombieMemo
                 
+                -- debuging
+                local counter = 0
+                for _, _ in pairs(serverZombieMemo) do
+                   counter = counter + 1 
+                end
+
+                BZM_Utils.DebugPrintWithBanner("Player: "..player:getOnlineID().."requesting server's zombie memory")
+                BZM_Utils.DebugPrint("Total saved zombies: "..counter)
+
                 SendServerCMD(BZM_Enums.BZM_OnlineModule,BZM_Commands.SyncServerZombiesIndividual,onlineArgs)
             end
 

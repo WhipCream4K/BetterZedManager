@@ -82,6 +82,7 @@ sharedTable.UpdeadMemoryFirstFrame = function (serverMemo)
         local zombieTable = clientZombieMemo[zombieID]
         zombieTable[zombieTypeStr] = dataTable[zombieTypeStr]
         zombieTable[wakeupTypeStr] = dataTable[wakeupTypeStr]
+
     end
     
 end
@@ -170,6 +171,7 @@ local function OnCreatePlayer(playerIndex,player)
     sharedTable.ThisPlayerIndex = playerIndex
     GetPlayer = getSpecificPlayer
     BZM_Utils.DebugPrintWithBanner("Current PlayerID: "..sharedTable.ThisPlayerIndex,true)
+    
     Events.EveryTenMinutes.Add(OnAfterEveryThingInit)
 
 end

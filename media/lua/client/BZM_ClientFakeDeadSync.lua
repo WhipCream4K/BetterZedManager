@@ -33,7 +33,8 @@ fakeDeadSync.SyncFakeDeadsFirstFrame = function ()
         end
         
     end
-    
+
+    Events.OnPostRender.Remove(fakeDeadSync.SyncFakeDeadsFirstFrame)
 
 end
 

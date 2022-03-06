@@ -34,7 +34,7 @@ queryZombie.QueryZombieInCell = function ()
     --     sharedData.ZombieMemory = {}
     -- end
     local tempZombieMemo = sharedData.ZombieMemory
-    local zombieObjStr = BZM_Enums.Memo.ZombieObj
+    -- local zombieObjStr = BZM_Enums.Memo.ZombieObj
 
     for i = 0, zombieList:size() - 1,1 do
         

@@ -187,16 +187,17 @@ local function OnZombieUpdate(zombie)
         local clientZombieMemo = sharedData.ZombieMemory
         
         if not clientZombieMemo[zombieID] then
-            return -- have no data here 
+            return -- have no data here
         end
 
         -- -- the normal walking one is fine but we need to sync the fake deads one
         local wakeupType = clientZombieMemo[zombieID][BZM_Enums.Memo.WakeupType]
         
         if not wakeupType then
-            BZM_Utils.DebugPrintWithBanner("YO this doesn't have wake up type")
-            BZM_Utils.DebugPrint("ZombieType: "..tostring(clientZombieMemo[zombieID][BZM_Enums.Memo.ZombieType]))
-            return -- normal walking zombie
+            -- not yet evaluated
+            -- BZM_Utils.DebugPrintWithBanner("YO this doesn't have wake up type")
+            -- BZM_Utils.DebugPrint("ZombieType: "..tostring(clientZombieMemo[zombieID][BZM_Enums.Memo.ZombieType]))
+            return
         end
 
         modData[BZM_Enums.ModDataValue.BZM_Data] = {} -- initialize our zone of table
@@ -257,6 +258,7 @@ local function OnZombieUpdate(zombie)
         zombie:setCanWalk(false)
         zombie:setCrawler(true)
         zombie:setOnFloor(true)
+        zombie:DoZombieStats()
         
     end
 

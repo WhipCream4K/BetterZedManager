@@ -37,10 +37,15 @@ regulator.RoundUpZombies = function (playerOnlineID,zombieList,outZombieMemory)
 
     BZM_Utils.DebugPrintWithBanner("Client Counter : "..clientCounter)
     
+    local counter = 0
+    
     for i = 1, #zombieList, 1 do
         -- this guaruntee the uniqueness of zombies by making it a set
         outZombieMemory[zombieList[i]] = {}
+        counter = counter + 1
     end
+
+    BZM_Utils.DebugPrint("Total zombies in this player: "..counter)
     
     if clientCounter >= totalOnlinePlayers then
         clientCounter = 0
