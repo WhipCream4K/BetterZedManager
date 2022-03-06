@@ -1,0 +1,97 @@
+VERSION = 1,
+option BetterZedManager.RespawnTimeInMinutes
+{
+	type = integer,min = 0,max = 65536,default = 60,
+	page = BetterZedManager, translation = BZM_RespawnTimeInMinutes,
+}
+option BetterZedManager.CanBeDisabled
+{
+	type = boolean,default = false,
+	page = BetterZedManager, translation = BZM_CanBeDisabled,
+}
+option BetterZedManager.DisableFrom
+{
+	type = integer,min = 0,max = 23,default = 0,
+	page = BetterZedManager, translation = BZM_DisableFrom,
+}
+option BetterZedManager.DisableTo
+{
+	type = integer,min = 0,max = 23,default = 0,
+	page = BetterZedManager, translation = BZM_DisableTo,
+}
+option BetterZedManager.PercentShamblers
+{
+	type = integer, min = 0, max = 100, default = 10,
+	page = BetterZedManager, translation = BZM_PercentShamblers,
+}
+option BetterZedManager.PercentFastShamblers
+{
+	type = integer, min = 0, max = 100, default = 70,
+	page = BetterZedManager, translation = BZM_PercentFastShamblers,
+}
+option BetterZedManager.PercentSprinters
+{
+	type = integer, min = 0, max = 100, default = 10,	
+	page = BetterZedManager, translation = BZM_PercentSprinters,
+}
+option BetterZedManager.PercentCrawlers
+{
+	type = integer, min = 0, max = 100, default = 10,	
+	page = BetterZedManager, translation = BZM_PercentCrawlers,
+}
+option BetterZedManager.EnableFakeDeads
+{
+	type = boolean, default = true,
+	page = BetterZedManager, translation = BZM_EnableFakeDeads,
+}
+option BetterZedManager.PercentFakeDeads
+{
+	type = integer, min = 0, max = 100, default = 10,
+	page = BetterZedManager, translation = BZM_PercentFakeDeads,
+}
+option BetterZedManager.FakeDeadsActiveVolume
+{
+	type = integer, min = 0, max = 65536, default = 30,
+	page = BetterZedManager, translation = BZM_FakeDeadsActiveVolume,
+}
+option BetterZedManager.FakeDeadsWakeupDistance
+{
+	type = string, default = 1.3,
+	page = BetterZedManager, translation = BZM_FakeDeadsWakeupDistance,
+}
+option BetterZedManager.FakeDeadsPercentWakeAsCrawlers
+{
+	type = integer, min = 0, max = 100, default = 100,
+	page = BetterZedManager, translation = BZM_FakeDeadsPercentWakeAsCrawlers,
+}
+option BetterZedManager.FakeDeadsPercentWakeAsShamblers
+{
+	type = integer, min = 0, max = 100, default = 0,
+	page = BetterZedManager, translation = BZM_FakeDeadsPercentWakeAsShamblers,
+}
+option BetterZedManager.FakeDeadsPercentWakeAsFastShamblers
+{
+	type = integer, min = 0, max = 100, default = 0,
+	page = BetterZedManager, translation = BZM_FakeDeadsPercentWakeAsFastShamblers,
+}
+option BetterZedManager.FakeDeadsPercentWakeAsSprinters
+{
+	type = integer, min = 0, max = 100, default = 0,
+	page = BetterZedManager, translation = BZM_FakeDeadsPercentWakeAsSprinters,
+}
+option BetterZedManager.FakeDeadsDisableJumpScare
+{
+	type = boolean, default = false,
+	page = BetterZedManager, translation = BZM_FakeDeadsDisableJumpScare,
+}
+option BetterZedManager.ZombieMemoryCleaningMethod
+{
+	type = enum,numValues = 3,default = 3,
+	page = BetterZedManager, translation = BZM_ZombieMemoryCleaningMethod,
+	valueTranslation = BZM_CleaningMethod,
+}
+option BetterZedManager.GenerateDebugInfo
+{
+	type = boolean,default = true,
+	page = BetterZedManager, translation = BZM_GenerateDebugInfo,
+}

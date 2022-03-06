@@ -1,0 +1,39 @@
+Sandbox_EN = {
+    Sandbox_BetterZedManager = "Better Zed Manager",
+    Sandbox_BZM_RespawnTimeInMinutes = "Respawn Time In Minutes",
+    Sandbox_BZM_RespawnTimeInMinutes_tooltip = "Reroll of zombies in in-game minutes",
+    
+    Sandbox_BZM_CanBeDisabled = "Can Be Disabled",
+    Sandbox_BZM_CanBeDisabled_tooltip = "Disable this mod for a peroid of time for other zombie mods :)",
+    
+    Sandbox_BZM_DisableFrom = "Disable From",
+    Sandbox_BZM_DisableTo = "Disable To",
+    
+    Sandbox_BZM_PercentShamblers = "Spawn Percentage Shamblers",
+    Sandbox_BZM_PercentFastShamblers = "Spawn Percentage Fast Shamblers",
+    Sandbox_BZM_PercentSprinters = "Spawn Percentage Sprinters",
+    Sandbox_BZM_PercentCrawlers = "Spawn Percentage Crawlers",
+    
+    Sandbox_BZM_EnableFakeDeads = "Enable Fake Deads",
+    Sandbox_BZM_EnableFakeDeads_tooltip = "Should spawn fake deads.\nThis is a client side operation.\nBeware that enabling this will require more computational power from the client because of how the behaviour of a fake dead works.",
+    Sandbox_BZM_PercentFakeDeads = "Spawn Percentage Fake Deads",
+    Sandbox_BZM_FakeDeadsActiveVolume = "Fake Deads Wakeup by Volume",
+    Sandbox_BZM_FakeDeadsWakeupDistance = "Fake Deads Wakeup Distance",
+    Sandbox_BZM_FakeDeadsWakeupDistance_tooltip = "If the player enters this range then fake deads should wake up.\nDon't put some stupid string in here, I didn't do integral validity of the string.\n If you put something other than a number it would break the mod.",
+    Sandbox_BZM_FakeDeadsPercentWakeAsCrawlers = "Fake Deads Wakeup Percentage as Crawlers",
+    Sandbox_BZM_FakeDeadsPercentWakeAsShamblers = "Fake Deads Wakeup Percentage as Shamblers",
+    Sandbox_BZM_FakeDeadsPercentWakeAsFastShamblers = "Fake Deads Wakeup Percentage as Fast Shamblers",
+    Sandbox_BZM_FakeDeadsPercentWakeAsSprinters = "Fake Deads Wakeup Percentage as Sprinters",
+    Sandbox_BZM_FakeDeadsDisableJumpScare = "Fake Deads Disable Jump Scare",
+    Sandbox_BZM_FakeDeadsDisableJumpScare_tooltip = "Should disable jump scare sound when in contact with fake deads.",
+    Sandbox_BZM_FakeDeadsActiveVolume_tooltip = "How loud should a fake dead wake up to.\nNote that the volume from a sound of this game scales linearly to the radius that the sound makes.\nThe default is 30: The sound of shouting.",
+    
+    Sandbox_BZM_ZombieMemoryCleaningMethod = "Client Zombie Memory Cleaning Method",
+    Sandbox_BZM_ZombieMemoryCleaningMethod_tooltip = "This is a client side operation.\nSince this mod is a workaround for spawning zombies, it needs memory to check against old zombies in player cell.\nThese are the methods of cleaning those memory.\nAlways Clean: for less memory but more function calls + memory deallocation(slow maybe).\nNever Clean: for more memory but less function calls (use with this with caution, I don't really know the overhead of lua table :/ but it would never release the value for the entire game session.\nClean EveryDay: will postpone the cleaning until after the start of each day.",
+    Sandbox_BZM_CleaningMethod_option1 = "Always Clean",
+    Sandbox_BZM_CleaningMethod_option2 = "Never Clean",
+    Sandbox_BZM_CleaningMethod_option3 = "Clean EveryDay",
+    
+
+    Sandbox_BZM_GenerateDebugInfo = "Generate Debug Info"
+}
