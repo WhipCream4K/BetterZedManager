@@ -23,14 +23,12 @@ local function ServerToClient(module,command,args)
             
             -- UpdateClientZombies(args)
             sharedData.UpdeadMemoryFirstFrame(args)
-            zombieSync.UpdateClientZombies(args)
+            zombieSync.UpdateClientZombies(args,sharedData.ZombieMemory)
 
         elseif command == BZM_Commands.QueryClientZombies then
 
-            local thisFrameZombies = zombieQuerier.QueryZombieInCell()
-            if thisFrameZombies then
-                SendClientCMD(sharedData.GetPlayer(),BZM_Enums.BZM_OnlineModule,BZM_Commands.ReRollZombies,thisFrameZombies)
-            end
+            local thisFrameZombies = zombieQuerier.QueryAndUpdateZombieMemo(sharedData.ZombieMemory)
+            SendClientCMD(sharedData.GetPlayer(),BZM_Enums.BZM_OnlineModule,BZM_Commands.ReRollZombies,thisFrameZombies)
             
         elseif command == BZM_Commands.SyncFakeDead then
             
@@ -47,8 +45,7 @@ local function ServerToClient(module,command,args)
             local myOnlineID = sharedData.GetPlayer():getOnlineID() or GetPlayer(sharedData.ThisPlayerIndex):getOnlineID()
             if myOnlineID == args[BZM_Enums.OnlineArgs.PlayerID] then
                 
-                BZM_Utils.DebugPrintWithBanner("Get information from previous zombie memo",true)
-
+                
                 local isTableValid = false
                 for _, _ in pairs(args[BZM_Enums.OnlineArgs.Memo]) do
                     isTableValid = true
@@ -56,11 +53,13 @@ local function ServerToClient(module,command,args)
                 end
                 
                 if isTableValid then
+
+                    BZM_Utils.DebugPrintWithBanner("Get information from previous zombie memo",true)
                     sharedData.UpdeadMemoryFirstFrame(args[BZM_Enums.OnlineArgs.Memo])
             
                     -- fakeDeadSync.SyncFakeDeadsFirstFrame()
                     -- make the client update the game after the first render
-                    Events.OnPostRender.Add(fakeDeadSync.SyncFakeDeadsFirstFrame)
+                    -- Events.OnPostRender.Add(fakeDeadSync.SyncFakeDeadsFirstFrame)
                 end
 
             end

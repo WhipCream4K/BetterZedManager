@@ -7,8 +7,8 @@ local regulator         = require("BZM_ZombieRegulator")
 local randomzier        = require("BZM_ZombiesRandomizer")
 
 -- variables stack
--- local serverPresistentZombieMemo = {}
-local serverZombieMemo           = {}
+local serverPresistentZombieMemo = {}
+local serverTempZombieMemo       = {}
 
 -- functions stack
 local SendServerCMD     = sendServerCommand
@@ -41,12 +41,10 @@ local function OnClientToServer(module,command,player,args)
         
         if command == BZM_Commands.ReRollZombies then
             
-            -- serverZombieMemo = {} -- time to reset
-
-            if regulator.RoundUpZombies(player:getOnlineID(),args,serverZombieMemo) then
-                local newRollList = randomzier.Random(serverZombieMemo)
-
+            if regulator.RoundUpZombies(player:getOnlineID(),args,serverTempZombieMemo,serverPresistentZombieMemo) then
+                local newRollList = randomzier.Random(serverTempZombieMemo,serverPresistentZombieMemo)
                 if newRollList then
+                    serverTempZombieMemo = {} -- reset the temp
                     SendServerCMD(BZM_Enums.BZM_OnlineModule,BZM_Commands.UpdateZombies,newRollList)
                 end
             end
@@ -54,22 +52,28 @@ local function OnClientToServer(module,command,player,args)
             
         elseif command == BZM_Commands.SyncServerZombiesIndividual then
 
-            if serverZombieMemo then
+            if serverPresistentZombieMemo then
 
                 local onlineArgs = {}
                 onlineArgs[BZM_Enums.OnlineArgs.PlayerID] = player:getOnlineID()
-                onlineArgs[BZM_Enums.OnlineArgs.Memo] = serverZombieMemo
+                onlineArgs[BZM_Enums.OnlineArgs.Memo] = serverPresistentZombieMemo
                 
                 -- debuging
                 local counter = 0
-                for _, _ in pairs(serverZombieMemo) do
-                   counter = counter + 1 
+                for _, _ in pairs(serverPresistentZombieMemo) do
+                   counter = counter + 1
+                --    BZM_Utils.DebugPrint("ZombieType: "..value[BZM_Enums.Memo.ZombieType].." wakeupType: "..value[BZM_Enums.Memo.WakeupType])
                 end
 
-                BZM_Utils.DebugPrintWithBanner("Player: "..player:getOnlineID().."requesting server's zombie memory")
-                BZM_Utils.DebugPrint("Total saved zombies: "..counter)
+                if counter > 0 then
+                    
+                    BZM_Utils.DebugPrintWithBanner("Player: "..player:getOnlineID().."requesting server's zombie memory")
+                    BZM_Utils.DebugPrint("Total saved zombies: "..counter)
+    
+                    SendServerCMD(BZM_Enums.BZM_OnlineModule,BZM_Commands.SyncServerZombiesIndividual,onlineArgs)
 
-                SendServerCMD(BZM_Enums.BZM_OnlineModule,BZM_Commands.SyncServerZombiesIndividual,onlineArgs)
+                end
+
             end
 
         elseif command == BZM_Commands.SyncFakeDead then

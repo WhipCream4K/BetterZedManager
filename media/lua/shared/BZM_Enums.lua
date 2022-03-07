@@ -26,7 +26,8 @@ local enums = {
     Memo = {
         ZombieType = "ZombieType",
         WakeupType = "WakeupType",
-        ZombieObj  = "ZombieObj"
+        ZombieObj  = "ZombieObj",
+        AwakeLater = "AwakeLater"
     },
     
     ModDataValue = {

@@ -14,7 +14,7 @@ local clientCounter     = 0
 local GetOnlinePlayers = getOnlinePlayers
 
 -- export funciton
-regulator.RoundUpZombies = function (playerOnlineID,zombieList,outZombieMemory)
+regulator.RoundUpZombies = function (playerOnlineID,zombieList,outZombieMemory,checkAgainstMemo)
 
     if not zombieList then
         return
@@ -35,18 +35,28 @@ regulator.RoundUpZombies = function (playerOnlineID,zombieList,outZombieMemory)
 
     clientCounter = clientCounter + 1
 
+    -- if clientCounter == 1 then -- if it's the first one calling then we reset the temp memo
+    --     outZombieMemory = {}
+    -- end
+
     BZM_Utils.DebugPrintWithBanner("Client Counter : "..clientCounter)
     
     local counter = 0
     
     for i = 1, #zombieList, 1 do
         -- this guaruntee the uniqueness of zombies by making it a set
-        outZombieMemory[zombieList[i]] = {}
-        counter = counter + 1
+        if not checkAgainstMemo[zombieList[i]] then
+
+            outZombieMemory[zombieList[i]] = {}
+            checkAgainstMemo[zombieList[i]] = {}
+
+            counter = counter + 1
+        end
+        
     end
 
     BZM_Utils.DebugPrint("Total zombies in this player: "..counter)
-    
+
     if clientCounter >= totalOnlinePlayers then
         clientCounter = 0
         return true

@@ -43,23 +43,19 @@ end
 sharedTable.RevalidateClientMemory = function (findZombieID)
     
     local clientZombieMemo = sharedTable.ZombieMemory
-    
-    if clientZombieMemo[findZombieID] then
-        return clientZombieMemo[findZombieID]
-    end
+    local zombieTypeKey = BZM_Enums.Memo.ZombieObj
 
-    local zombieObjStr = BZM_Enums.Memo.ZombieObj
     local zombieList = sharedTable.GetZombiesInCell()
+    
     for i = 0, zombieList:size() - 1, 1 do
         
         local zombie = zombieList:get(i)
         local zombieID = zombie:getOnlineID()
 
-        if not clientZombieMemo[zombieID] then
+        if clientZombieMemo[zombieID] then
             
-            clientZombieMemo[zombieID] = {}
-            clientZombieMemo[zombieID][zombieObjStr] = zombie
-
+            clientZombieMemo[zombieID][zombieTypeKey] = zombie
+            
         end
 
     end
@@ -70,18 +66,41 @@ end
 
 sharedTable.UpdeadMemoryFirstFrame = function (serverMemo)
 
-    local zombieTypeStr = BZM_Enums.ModDataValue.ZombieType
-    local wakeupTypeStr = BZM_Enums.ModDataValue.WakeupType
+    local zombieTypeKey = BZM_Enums.Memo.ZombieType
+    local wakeupTypeKey = BZM_Enums.Memo.WakeupType
 
     local clientZombieMemo = sharedTable.ZombieMemory
 
     for zombieID, dataTable in pairs(serverMemo) do
         
-        clientZombieMemo[zombieID] = clientZombieMemo[zombieID] or {}
-        BZM_Utils.DebugPrint("Sync zombies from previous player:"..zombieID)
+        BZM_Utils.DebugPrint("Sync zombies from previous player:"..zombieID.." zombieType: "..tostring(dataTable[zombieTypeKey].." wakeupType: "..tostring(dataTable[wakeupTypeKey])))
+        
+        -- overwrites the old one if needed
+        
         local zombieTable = clientZombieMemo[zombieID]
-        zombieTable[zombieTypeStr] = dataTable[zombieTypeStr]
-        zombieTable[wakeupTypeStr] = dataTable[wakeupTypeStr]
+
+        if not zombieTable then
+
+            clientZombieMemo[zombieID] = {}
+            zombieTable = clientZombieMemo[zombieID]
+            -- zombieTable[zombieTypeKey] = dataTable[zombieTypeKey]
+            -- zombieTable[wakeupTypeKey] = dataTable[wakeupTypeKey]
+        end
+
+        zombieTable[zombieTypeKey] = dataTable[zombieTypeKey]
+        zombieTable[wakeupTypeKey] = dataTable[wakeupTypeKey]
+        
+        -- if not zombieTable or not(zombieTable[zombieTypeKey] or zombieTable[wakeupTypeKey]) then
+            
+        --     -- clientZombieMemo[zombieID] = clientZombieMemo[zombieID] or {}
+            
+        --     zombieTable[zombieTypeKey] = dataTable[zombieTypeKey]
+        --     zombieTable[wakeupTypeKey] = dataTable[wakeupTypeKey]
+            
+        -- end
+        
+
+
 
     end
     

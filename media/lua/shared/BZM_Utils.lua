@@ -5,9 +5,6 @@ local utils = {}
 -- local sharedData        = require("BZM_SharedData")
 local BZM_Enums         = require("BZM_Enums")
 
--- functions stack
-local GetPlayer         = nil
-
 ---return if the value is the same as in list
 ---@param inValue any
 ---@param list any
@@ -22,7 +19,7 @@ utils.IsValueInList = function (inValue,list)
     return false
 end
 
-utils.FamousZombieTypeUpdate = function(sandboxOptions,zombie,newType,newSpeed)
+utils.FamousZombieTypeUpdate = function(sandboxOptions,zombie,newType)
 
     local isWakeup =  math.abs(newType - BZM_Enums.ZombieType.Crawlers) -- if we minus newType then 1 = FakeDead 0 = Craweler
 
@@ -157,18 +154,6 @@ utils.InitFakeDeadModData = function (modData,zombieID,zombieMemory)
 
 end
 
--- utils.GetZombieListFromOnlinePlayer = function (playerIndex)
---     local player = getPlayerByOnlineID(playerIndex)
---     if not player then
---         return nil
---     end
---     local playerCell = player:getCell()
---     if not playerCell then
---         return nil
---     end
---     return playerCell:getZombieList()
--- end
-
 utils.GetZombieListFromPlayerIndex = function (playerIndex)
     
     local player = getSpecificPlayer(playerIndex)
@@ -194,7 +179,7 @@ utils.DebugPrint = function (msg)
 
 end
 
-utils.IsSquareNearSquare = function (targetSquare,thisSquare,range)
+utils.IsSquareNearSquare = function (thisSquare,targetSquare,range)
     local distance = thisSquare:DistTo(targetSquare)
     return distance <= range
 end
@@ -208,17 +193,5 @@ utils.IsSquareNearPos = function (posX,posY,square,range)
     local distance = square:DistTo(posX,posY)
     return distance <= range
 end
-
--- local function OnCreatePlayer(playerIndex,player)
---     if not isClient() then
---         -- is solo
---         GetPlayer = getSpecificPlayer
---     else   
---         utils.DebugPrintWithBanner("Using Online Player Query",true)
---         GetPlayer = getPlayerByOnlineID
---     end
--- end
-
--- Events.OnCreatePlayer.Add(OnCreatePlayer) -- call once after player click screen
 
 return utils

@@ -15,13 +15,13 @@ local fakeDeadWakeupPoolAccumulateChance    = 0
 
 
 -- export this function
-randomzier.Random = function (zombieMemory,outRollMemory)
+randomzier.Random = function (rollTableTobeUsed,outRollTable)
     
     BZM_Utils.DebugPrintWithBanner("Rolling Zombies",false)
 
     if getDebug() then
         local poolSize = 0
-        for _, _ in pairs(zombieMemory) do
+        for _, _ in pairs(rollTableTobeUsed) do
             poolSize = poolSize + 1
         end
     
@@ -35,10 +35,10 @@ randomzier.Random = function (zombieMemory,outRollMemory)
 
     local memoEnums = BZM_Enums.Memo
     
-    local zombieTypeStr = memoEnums.ZombieType
-    local wakeupTypeStr = memoEnums.WakeupType
+    local zombieTypeKey = memoEnums.ZombieType
+    local wakeupTypeKey = memoEnums.WakeupType
 
-    for zombieID, memo in pairs(zombieMemory) do
+    for zombieID, memo in pairs(rollTableTobeUsed) do
         
         outNewZombieSpeed[zombieID] = {}
 
@@ -49,17 +49,27 @@ randomzier.Random = function (zombieMemory,outRollMemory)
         -- local totalSpeed = BZM_Utils.GetBaseSpeedByType(zombieType)
         -- totalSpeed = totalSpeed + BZM_Utils.GetRandSpeedRangeByType(zombieType)
 
-        outNewZombieSpeed[zombieID][zombieTypeStr] = zombieType
-        memo[zombieTypeStr] = zombieType
+        outNewZombieSpeed[zombieID][zombieTypeKey] = zombieType
+        memo[zombieTypeKey] = zombieType
+
+        -- update out roll table
+        outRollTable[zombieID] = outRollTable[zombieID] or {}
+        local outDataTable = outRollTable[zombieID]
+        outDataTable[zombieTypeKey] = zombieType
         
         if zombieType == BZM_Enums.ZombieType.FakeDeads then
+
             local wakeupRand = zombRand(fakeDeadWakeupPoolAccumulateChance) + 1
             local wakeupType = getRandFromList(wakeupRand,fakeDeadsWakeupPool)
 
-            outNewZombieSpeed[zombieID][wakeupTypeStr] = wakeupType
-            memo[zombieTypeStr] = wakeupType
+            outNewZombieSpeed[zombieID][wakeupTypeKey] = wakeupType
+            memo[wakeupTypeKey] = wakeupType
+
+            -- update out roll table
+            outDataTable[wakeupTypeKey] = wakeupType
 
             BZM_Utils.DebugPrint("ZombieID: "..zombieID.." becomes: "..zombieType.." wakeupType: "..tostring(wakeupType))
+
         end
         
         

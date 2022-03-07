@@ -16,7 +16,7 @@ local SendClientCMD         = sendClientCommand
 
 
 -- export this function
-queryZombie.QueryZombieInCell = function ()
+queryZombie.QueryAndUpdateZombieMemo = function (clientMemo)
     
     local zombieList = sharedData.GetZombiesInCell()
     
@@ -33,15 +33,15 @@ queryZombie.QueryZombieInCell = function ()
     -- if cleaningMethod == BZM_Enums.CleanMemMethod.AlwaysClean then
     --     sharedData.ZombieMemory = {}
     -- end
-    local tempZombieMemo = sharedData.ZombieMemory
-    -- local zombieObjStr = BZM_Enums.Memo.ZombieObj
+    -- local tempZombieMemo = clientMemo
+    local zombieObjStr = BZM_Enums.Memo.ZombieObj
 
     for i = 0, zombieList:size() - 1,1 do
         
         local zombie = zombieList:get(i)
         local zombieID = zombie:getOnlineID()
 
-        if not tempZombieMemo[zombieID] then
+        if not clientMemo[zombieID] then
             local realState = zombie:getRealState()
             if isValueInList(realState,interestZombieStates) then
 
@@ -54,6 +54,11 @@ queryZombie.QueryZombieInCell = function ()
                 
                 filterList[#filterList+1] = zombieID
             end
+
+            -- assigne zombieobj to the client memo
+            clientMemo[zombieID] = {}
+            clientMemo[zombieID][zombieObjStr] = zombie
+
         end
 
         -- if we never clean then the temp will be a reference and we will keep appending the set
@@ -61,9 +66,10 @@ queryZombie.QueryZombieInCell = function ()
         -- sharedData.ZombieMemory[zombieID].zombieObj = zombie
         -- tempZombieMemo[zombieID] = tempZombieMemo[zombieID] or {}
         -- tempZombieMemo[zombieID][zombieObjStr] = zombie
+        
 
-        -- outZombiememory[zombie] = outZombiememory[zombie] or {}
-        -- outZombiememory[zombie] = zombie
+        -- clientMemo[zombieID][zombieObjStr] = clientMemo[zombieID][zombieObjStr] or {}
+        -- clientMemo[zombieID][zombieObjStr] = zombie
 
     end
 
