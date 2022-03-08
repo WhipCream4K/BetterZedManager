@@ -34,10 +34,6 @@ fakeDeadUpdate.PreparingWakeUp = function (modData,zombie,shouldNotifyOtherClien
         return
     end
 
-    -- local zombieID   = zombie:getOnlineID()
-    -- local clientMemo = sharedData.ZombieMemory
-    -- clientMemo[zombieID][BZM_Enums.Memo.IsAlreadyWake] = false
-
     zombie:setCrawler(false)
     zombie:setKnockedDown(false)
     zombie:setStaggerBack(false)
