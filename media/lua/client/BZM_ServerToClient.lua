@@ -9,6 +9,7 @@ local sharedData        = require("BZM_ClientSharedData")
 local zombieQuerier     = require("BZM_ClientQueryZombie")
 local zombieSync        = require("BZM_ClientZombieSync")
 local sharedData2       = require("BZM_ClientSharedData2")
+local zombieManger      = require("BZM_ClientZombieManager")
 
 -- variables stack
 
@@ -23,9 +24,11 @@ local function ServerToClient(module,command,args)
         if command == BZM_Commands.UpdateZombies then
             
             -- UpdateClientZombies(args)
-            sharedData.UpdeadMemoryFirstFrame(args)
+            -- sharedData.UpdeadMemoryFirstFrame(args)
             zombieSync.UpdateClientZombies(args,sharedData.ZombieMemory)
-            -- sharedData2.zombieMemory:UpdateData(args)
+
+            sharedData2.zombieMemory:UpdateData(args)
+            zombieManger.UpdateClientZombies(sharedData2.zombieMemory)
 
         elseif command == BZM_Commands.QueryClientZombies then
 
