@@ -1,4 +1,5 @@
 -- handles the zombies randomizing
+require("BZM_ZombieManager")
 
 local randomzier = {}
 
@@ -15,7 +16,7 @@ local fakeDeadWakeupPoolAccumulateChance    = 0
 
 
 -- export this function
-randomzier.Random = function (rollTableTobeUsed,outRollTable)
+randomzier.RandomAndUpdateMemory = function (rollTableTobeUsed,currentZombieMemory)
     
     BZM_Utils.DebugPrintWithBanner("Rolling Zombies",false)
 
@@ -28,7 +29,7 @@ randomzier.Random = function (rollTableTobeUsed,outRollTable)
         BZM_Utils.DebugPrint("TotalPool: "..poolSize)
     end
 
-    local outNewZombieSpeed = {}
+    local outNewZombieMemo = ZombieMemory:New()
 
     local zombRand = ZombRand -- pull to local
     local getRandFromList = BZM_Utils.GetRandFromList
@@ -40,7 +41,7 @@ randomzier.Random = function (rollTableTobeUsed,outRollTable)
 
     for zombieID, memo in pairs(rollTableTobeUsed) do
         
-        outNewZombieSpeed[zombieID] = {}
+        local outNewZombieSpeed = outNewZombieMemo:GetOrCreateDataByZombieID(zombieID)
 
         local randNumber = zombRand(zombieTypePoolAccumulateChance) + 1
         local zombieType = getRandFromList(randNumber,zombieTypePool)
@@ -49,24 +50,24 @@ randomzier.Random = function (rollTableTobeUsed,outRollTable)
         -- local totalSpeed = BZM_Utils.GetBaseSpeedByType(zombieType)
         -- totalSpeed = totalSpeed + BZM_Utils.GetRandSpeedRangeByType(zombieType)
 
-        outNewZombieSpeed[zombieID][zombieTypeKey] = zombieType
-        memo[zombieTypeKey] = zombieType
-
-        -- update out roll table
-        outRollTable[zombieID] = outRollTable[zombieID] or {}
-        local outDataTable = outRollTable[zombieID]
-        outDataTable[zombieTypeKey] = zombieType
+        outNewZombieSpeed[zombieTypeKey] = zombieType
+        
+        -- update out memory
+        local currentMemoData = currentZombieMemory:GetOrCreateDataByZombieID(zombieID)
+        currentMemoData[zombieTypeKey] = zombieType
+        
         
         if zombieType == BZM_Enums.ZombieType.FakeDeads then
 
             local wakeupRand = zombRand(fakeDeadWakeupPoolAccumulateChance) + 1
             local wakeupType = getRandFromList(wakeupRand,fakeDeadsWakeupPool)
 
-            outNewZombieSpeed[zombieID][wakeupTypeKey] = wakeupType
-            memo[wakeupTypeKey] = wakeupType
+            outNewZombieSpeed[wakeupTypeKey] = wakeupType
+            -- memo[wakeupTypeKey] = wakeupType
 
             -- update out roll table
-            outDataTable[wakeupTypeKey] = wakeupType
+            -- outDataTable[wakeupTypeKey] = wakeupType
+            currentMemoData[wakeupTypeKey] = wakeupType
 
             BZM_Utils.DebugPrint("ZombieID: "..zombieID.." becomes: "..zombieType.." wakeupType: "..tostring(wakeupType))
 
@@ -77,7 +78,7 @@ randomzier.Random = function (rollTableTobeUsed,outRollTable)
 
     end
 
-    return outNewZombieSpeed
+    return outNewZombieMemo
 
 end
 

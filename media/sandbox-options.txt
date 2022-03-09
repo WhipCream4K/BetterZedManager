@@ -4,6 +4,11 @@ option BetterZedManager.RespawnTimeInMinutes
 	type = integer,min = 0,max = 65536,default = 60,
 	page = BetterZedManager, translation = BZM_RespawnTimeInMinutes,
 }
+option BetterZedManager.RespawnUnseenDistance
+{
+	type = string,default = 40.0,
+	page = BetterZedManager, translation = BZM_RespawnUnseenDistance,
+}
 option BetterZedManager.CanBeDisabled
 {
 	type = boolean,default = false,
@@ -89,6 +94,11 @@ option BetterZedManager.ZombieMemoryCleaningMethod
 	type = enum,numValues = 3,default = 3,
 	page = BetterZedManager, translation = BZM_ZombieMemoryCleaningMethod,
 	valueTranslation = BZM_CleaningMethod,
+}
+option BetterZedManager.CleanTime
+{
+	type = integer,min = 0,max = 65535,default = 1440
+	page = BetterZedManager, translation = BZM_CleanTime,
 }
 option BetterZedManager.GenerateDebugInfo
 {

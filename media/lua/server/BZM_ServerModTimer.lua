@@ -8,7 +8,12 @@ local BZM_Enums             = require("BZM_Enums")
 -- variable stack
 local rerollCounterInMins   = 0
 local rerollLimitInMins     = 0
-local rerollEvent           = 0
+local rerollEvent           = nil
+
+local resetCounterInMins    = 0
+local resetLimitInMins      = 0
+local resetEvent            = nil
+
 local isModDisable          = false
 
 -- function stack
@@ -20,14 +25,21 @@ local function CallRespawn()
 
     rerollCounterInMins = rerollCounterInMins + 1
 
-    -- BZM_Utils.DebugPrintWithBanner("Reroll One minute: "..rerollTimeOneMinutesCounter)
-
     if(rerollCounterInMins >= rerollLimitInMins) then
-        
         SendServerCMD(BZM_Enums.BZM_OnlineModule,BZM_Commands.QueryClientZombies,{})
-
         rerollCounterInMins = 0
+    end
 
+end
+
+local function CallReset()
+    
+    resetCounterInMins = resetCounterInMins + 1
+
+    if(resetCounterInMins >= resetLimitInMins) then
+        ResetServerMemo()
+        SendServerCMD(BZM_Enums.BZM_OnlineModule,BZM_Commands.ResetServerMemo,{})
+        resetCounterInMins = 0
     end
 
 end
@@ -35,9 +47,12 @@ end
 local function SetActiveMod(value)
     if value then
         rerollCounterInMins = 0
+        resetCounterInMins = 0
         rerollEvent.Remove(CallRespawn)
+        resetEvent.Remove(CallReset)
     else
         rerollEvent.Add(CallRespawn)
+        resetEvent.Add(CallReset)
     end
 end
 
@@ -59,6 +74,8 @@ local function ModDisableCheck()
     end
 
 end
+
+
 
 local function ShouldModDisableFirstFrame()
     
@@ -84,9 +101,18 @@ local function InitVariables()
     local currentSandbox = SandboxVars.BetterZedManager
 
     rerollLimitInMins = currentSandbox.RespawnTimeInMinutes
+
     if rerollLimitInMins > 0 then
         rerollEvent = Events.EveryOneMinute
         rerollEvent.Add(CallRespawn)
+    end
+
+    if currentSandbox.ZombieMemoryCleaningMethod == BZM_Enums.CleanMemMethod.CleanSpecified then
+        resetEvent = Events.EveryOneMinute
+        resetEvent.Add(CallReset)
+    elseif currentSandbox.ZombieMemoryCleaningMethod == BZM_Enums.CleanMemMethod.CleanEveryDay then
+        resetEvent = Events.EveryDays
+        resetEvent.Add(CallReset)
     end
 
     if currentSandbox.CanBeDisabled then

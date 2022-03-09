@@ -1,5 +1,8 @@
 
-require("BZM_ZombieMemory")
+-- require("BZM_ZombieMemory")
+
+local BZM_Enums     = require("BZM_Enums")
+local BZM_Commands  = require("BZM_Commands")
 
 local sharedData = {
     zombieMemory = ZombieMemory:New(),
@@ -8,6 +11,7 @@ local sharedData = {
 
 -- function stack
 local GetPlayer     = getSpecificPlayer
+local SendClientCMD = sendClientCommand
 
 sharedData.GetPlayer = function ()
     return GetPlayer(sharedData.thisPlayerIndex)
@@ -29,10 +33,19 @@ sharedData.GetZombiesInCell = function ()
     
 end
 
-local function OnPlayerCreate(playerIndex,player)
-    sharedData.thisPlayerIndex = playerIndex
+local function SyncWhenEnter()
+
+    -- at the first frame we need to sync all previous zombie memory from the server
+    SendClientCMD(BZM_Enums.BZM_OnlineModule,BZM_Commands.SyncServerZombiesIndividual,{})
+    Events.EveryTenMinutes.Remove(SyncWhenEnter)
+    
 end
 
-Events.OnPlayerCreate.Add(OnPlayerCreate)
+local function OnCreatePlayer(playerIndex,player)
+    sharedData.thisPlayerIndex = playerIndex
+    Events.EveryTenMinutes.Add(SyncWhenEnter)
+end
+
+Events.OnCreatePlayer.Add(OnCreatePlayer)
 
 return sharedData

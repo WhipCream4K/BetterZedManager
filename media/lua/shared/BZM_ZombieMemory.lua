@@ -14,30 +14,58 @@ function ZombieMemory:New()
     return this
 end
 
-function ZombieMemory:GetData(zombieID,dataType)
-    local table = self.data[zombieID]
-    if not table then
+function ZombieMemory:NewFromTable(other)
+    local this = {
+        data = other
+    }
+    setmetatable(this,ZombieMemory)
+    return this
+end
+
+function ZombieMemory:GetDataType(zombieID,dataType)
+
+    local s = self.data[zombieID]
+
+    if not s then
         return nil
     end
 
-    return table[dataType]
+    return s[dataType]
+
+end
+
+function ZombieMemory:GetOrCreateDataByZombieID(zombieID)
+
+    local s = self.data[zombieID]
+
+    if not s then
+        self.data[zombieID] = {}
+        return self.data[zombieID]
+    end
+
+    return s
 
 end
 
 function ZombieMemory:GetZombieType(zombieID)
-    return self.GetData(zombieID,BZM_Enums.Memo.ZombieType)
+    return self:GetDataType(zombieID,BZM_Enums.Memo.ZombieType)
+end
+
+function ZombieMemory:GetZombieObj(zombieID)
+    return self:GetDataType(zombieID,BZM_Enums.Memo.ZombieObj)
 end
 
 function ZombieMemory:SetData(zombieID,dataType,value)
-    local table = self.data[zombieID]
+    
+    local s = self.data[zombieID]
 
-    if not table then
-        return false
+    if not s then
+        self.data[zombieID] = {}
+        s = self.data[zombieID]
     end
 
-    table[dataType] = value
+    s[dataType] = value
 
-    return true
 end
 
 function ZombieMemory:IsExist(zombieID)
@@ -53,10 +81,10 @@ function ZombieMemory:GetTable()
 end
 
 ---update data according to another zombie memo
----@param zombieMemory table
-function ZombieMemory:UpdateData(zombieMemory)
+---@param other table
+function ZombieMemory:UpdateData(other)
     
-    local anotherZombieData = zombieMemory:GetTable()
+    local anotherZombieData = other:GetTable()
 
     local zombieTypeKey =  BZM_Enums.Memo.ZombieType
     local wakeupTypeKey = BZM_Enums.Memo.WakeupType
@@ -85,6 +113,7 @@ function ZombieMemory:UpdateDataPerType(zombieMemory,typesSet)
     -- local wakeupTypeKey = BZM_Enums.Memo.WakeupType
     
     BZM_Utils.DebugPrintWithBanner("Updating ZombieMemory",true)
+    
     for zombieID, dataTable in pairs(anotherZombieData) do
         local ourTable = self.data[zombieID]
 

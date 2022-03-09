@@ -1,8 +1,10 @@
 Sandbox_EN = {
     Sandbox_BetterZedManager = "Better Zed Manager",
-    Sandbox_BZM_RespawnTimeInMinutes = "Respawn Time In Minutes",
+    Sandbox_BZM_RespawnTimeInMinutes = "Respawn Frequncy In Minutes",
     Sandbox_BZM_RespawnTimeInMinutes_tooltip = "Reroll of zombies in in-game minutes",
-    
+    Sandbox_BZM_RespawnUnseenDistance = "Respawn Unseen Range",
+    Sandbox_BZM_RespawnUnseenDistance_tooltip = "The zombie will spawn outside of this range",
+
     Sandbox_BZM_CanBeDisabled = "Can Be Disabled",
     Sandbox_BZM_CanBeDisabled_tooltip = "Disable this mod for a peroid of time for other zombie mods :)",
     
@@ -28,11 +30,14 @@ Sandbox_EN = {
     Sandbox_BZM_FakeDeadsDisableJumpScare_tooltip = "Should disable jump scare sound when in contact with fake deads.",
     Sandbox_BZM_FakeDeadsActiveVolume_tooltip = "How loud should a fake dead wake up to.\nNote that the volume from a sound of this game scales linearly to the radius that the sound makes.\nThe default is 30: The sound of shouting.",
     
-    Sandbox_BZM_ZombieMemoryCleaningMethod = "Client Zombie Memory Cleaning Method",
-    Sandbox_BZM_ZombieMemoryCleaningMethod_tooltip = "This is a client side operation.\nSince this mod is a workaround for spawning zombies, it needs memory to check against old zombies in player cell.\nThese are the methods of cleaning those memory.\nAlways Clean: for less memory but more function calls + memory deallocation(slow maybe).\nNever Clean: for more memory but less function calls (use with this with caution, I don't really know the overhead of lua table :/ but it would never release the value for the entire game session.\nClean EveryDay: will postpone the cleaning until after the start of each day.",
-    Sandbox_BZM_CleaningMethod_option1 = "Always Clean",
-    Sandbox_BZM_CleaningMethod_option2 = "Never Clean",
-    Sandbox_BZM_CleaningMethod_option3 = "Clean EveryDay",
+    Sandbox_BZM_ZombieMemoryCleaningMethod = "Server Zombie Memory Cleaning Method",
+    Sandbox_BZM_ZombieMemoryCleaningMethod_tooltip = "This is a server side operation.\nSince this mod is a workaround for spawning zombies, it needs memory for run-time checks against old zombies in player cell.\nThese are the methods of cleaning those memory.\nNever Clean: for more memory but less function calls (use with this with caution, I don't really know the overhead of lua table :/ but it would never release the value for the entire game session.\nClean EveryDay: will postpone the cleaning until after the start of each day.",
+    Sandbox_BZM_CleaningMethod_option1 = "Clean EveryDay",
+    Sandbox_BZM_CleaningMethod_option2 = "Clean Specified",
+    Sandbox_BZM_CleaningMethod_option3 = "Never Clean",
+    Sandbox_BZM_CleanTime = "Clean Time",
+    Sandbox_BZM_CleanTime_tooltip = "Clean time if \"Clean Specified\" was used.",
+
     
 
     Sandbox_BZM_GenerateDebugInfo = "Generate Debug Info"

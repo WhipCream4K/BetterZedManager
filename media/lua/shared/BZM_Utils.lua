@@ -131,6 +131,12 @@ utils.DebugPrintWithBanner = function (msg,isClient)
 
 end
 
+utils.SetModData = function (modData,type,value)
+    -- initialize our moddata block
+    modData[BZM_Enums.ModDataValue.BZM_Data] = modData[BZM_Enums.ModDataValue.BZM_Data] or {}
+    modData[BZM_Enums.ModDataValue.BZM_Data][type] = value
+end
+
 utils.InitFakeDeadModData = function (modData,zombieID,zombieMemory)
 
     if not zombieMemory[zombieID] then
@@ -152,6 +158,14 @@ utils.InitFakeDeadModData = function (modData,zombieID,zombieMemory)
     utils.DebugPrintWithBanner("This wake up type: "..wakeupType,true)
     ourData[BZM_Enums.ModDataValue.WakeupType] = wakeupType
 
+end
+
+utils.GetPlayerCurrentSquare = function (playerIndex)
+    return getSpecificPlayer(playerIndex):getCurrentSquare()
+end
+
+utils.SendClientCMD = function (playerIndex,command,args)
+    sendClientCommand(getSpecificPlayer(playerIndex),BZM_Enums.BZM_OnlineModule,command,args)
 end
 
 utils.GetZombieListFromPlayerIndex = function (playerIndex)

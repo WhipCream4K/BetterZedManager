@@ -42,13 +42,14 @@ regulator.RoundUpZombies = function (playerOnlineID,zombieList,outZombieMemory,c
     BZM_Utils.DebugPrintWithBanner("Client Counter : "..clientCounter)
     
     local counter = 0
-    
+    local checkAgainstZombieMemo = checkAgainstMemo:GetTable()
+
     for i = 1, #zombieList, 1 do
         -- this guaruntee the uniqueness of zombies by making it a set
-        if not checkAgainstMemo[zombieList[i]] then
+        if not checkAgainstZombieMemo[zombieList[i]] then
 
             outZombieMemory[zombieList[i]] = {}
-            checkAgainstMemo[zombieList[i]] = {}
+            checkAgainstZombieMemo[zombieList[i]] = {}
 
             counter = counter + 1
         end

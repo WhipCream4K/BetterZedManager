@@ -1,13 +1,11 @@
-
 -- handles fake zombies update mostly
-
--- require("BZM_Enums")
 
 -- moduel stack
 local BZM_Commands          = require("BZM_Commands")
 local BZM_Utils             = require("BZM_Utils")
 local BZM_Enums             = require("BZM_Enums")
-local sharedData            = require("BZM_ClientSharedData")
+-- local sharedData            = require("BZM_ClientSharedData")
+local sharedData2           = require("BZM_ClientSharedData2")
 
 -- variable stack
 -- local playerObject       = 0
@@ -45,7 +43,7 @@ fakeDeadUpdate.PreparingWakeUp = function (modData,zombie,shouldNotifyOtherClien
         local onlineData = {}
         onlineData[BZM_Enums.OnlineArgs.ZombieID] = zombie:getOnlineID()
 
-        SendClientCMD(sharedData.GetPlayer(),BZM_Enums.BZM_OnlineModule,BZM_Commands.SyncFakeDead,onlineData)
+        SendClientCMD(sharedData2.GetPlayer(),BZM_Enums.BZM_OnlineModule,BZM_Commands.SyncFakeDead,onlineData)
 
     end
 
@@ -53,9 +51,9 @@ fakeDeadUpdate.PreparingWakeUp = function (modData,zombie,shouldNotifyOtherClien
         -- another sanity check
         if zombie:isFakeDead() and not SandboxVars.BetterZedManager.FakeDeadsDisableJumpScare then
             -- local player = GetPlayer(thisPlayerIndex)
-            local soundEmitter = sharedData.GetPlayer():getEmitter()
+            local soundEmitter = sharedData2.GetPlayer():getEmitter()
             if not soundEmitter:isPlaying("ZombieSurprisedPlayer") then
-                soundEmitter:playSoundImpl("ZombieSurprisedPlayer",sharedData.GetPlayer()) -- play local sound
+                soundEmitter:playSoundImpl("ZombieSurprisedPlayer",sharedData2.GetPlayer()) -- play local sound
             end
         end
     end
@@ -185,7 +183,7 @@ end
 
 local function OnHitZombie(zombie, character, bodyPartType, handWeapon)
     
-    local thisPlayerId = sharedData.GetPlayer():getOnlineID()
+    local thisPlayerId = sharedData2.GetPlayer():getOnlineID()
     local hittingPlayerId = character:getOnlineID()
 
     if not zombie:isDead() and zombie:isFakeDead() then
@@ -208,23 +206,25 @@ local function OnZombieUpdate(zombie)
         -- need to check the shared memory and add the appropiate data
         -- BZM_Utils.InitFakeDeadModData(modData,zombieID,sharedData.ZombieMemory)
         
-        local clientZombieMemo = sharedData.ZombieMemory
+        local clientZombieMemo = sharedData2.zombieMemory
         
-        local thisZombieData = clientZombieMemo[zombieID]
+        -- local thisZombieData = clientZombieMemo[zombieID]
 
-        if not thisZombieData then
+        if not clientZombieMemo:IsExist(zombieID) then
             return -- have no data here
         end
 
-        local wakeupType = thisZombieData[BZM_Enums.Memo.WakeupType]
+        -- local wakeupType = thisZombieData[BZM_Enums.Memo.WakeupType]
+        local wakeupType = clientZombieMemo:GetDataType(zombieID,BZM_Enums.Memo.WakeupType)
         
         if not wakeupType then
             -- not yet evaluated from the server
             return
         end
 
-        modData[BZM_Enums.ModDataValue.BZM_Data] = {} -- initialize our zone of table
-        modData[BZM_Enums.ModDataValue.BZM_Data][BZM_Enums.ModDataValue.WakeupType] = wakeupType
+        -- modData[BZM_Enums.ModDataValue.BZM_Data] = {} -- initialize our zone of table
+        -- modData[BZM_Enums.ModDataValue.BZM_Data][BZM_Enums.ModDataValue.WakeupType] = wakeupType
+        BZM_Utils.SetModData(modData,BZM_Enums.ModDataValue.WakeupType,wakeupType)
     
     end
     
@@ -252,14 +252,33 @@ local function OnZombieUpdate(zombie)
 
     if not zombie:isFakeDead() then
 
-        -- control when another player brings a fake dead over to this player cell
-        -- then we have to tell this player to wake that fake dead
-        local thisZombieData = sharedData.ZombieMemory[zombieID]
-    
-        if thisZombieData and thisZombieData[BZM_Enums.Memo.AwakeLater] then
-            thisZombieData[BZM_Enums.Memo.AwakeLater] = false
-            fakeDeadUpdate.PreparingWakeUp(ourModData,zombie,false,false)
+        -- we have problem where new player enters the cell and there's already 
+        -- players waking up the crawlers
+        -- if the new player goes near that crawler, it forces itself to standing up
+        -- so this is a prevention for that
+        local clientMemo        = sharedData2.zombieMemory
+
+        if clientMemo:GetDataType(zombieID,BZM_Enums.Memo.WakeupType) == 
+        BZM_Enums.FakeDeadWakeupType.Crawlers then
+            -- keep crawler on the floor
+            zombie:setCanWalk(false)
+            zombie:setCrawler(true)
+            zombie:DoZombieStats()
         end
+
+        -- if clientMemo:GetDataType(zombieID,BZM_Enums.Memo.WakeupType) and
+        -- clientMemo:GetDataType(zombieID,BZM_Enums.Memo.AwakeLater) then
+        --     clientMemo:SetData(zombieID,BZM_Enums.Memo.AwakeLater,false)
+        --     fakeDeadUpdate.PreparingWakeUp(ourModData,zombie,false,false)
+        -- end
+        
+        -- if clientMemo:IsExist(zombieID) then
+        --     clientMemo:SetData(zombieID,BZM_Enums.Memo.AwakeLater,false)
+        -- end
+        -- if thisZombieData and thisZombieData[BZM_Enums.Memo.AwakeLater] then
+        --     thisZombieData[BZM_Enums.Memo.AwakeLater] = false
+        --     fakeDeadUpdate.PreparingWakeUp(ourModData,zombie,false,false)
+        -- end
 
         return
     else
@@ -283,7 +302,7 @@ local function OnZombieUpdate(zombie)
         -- sanity check
         if zombieSquare then
                     -- check if player is near the zombie
-        local player = sharedData.GetPlayer()
+        local player = sharedData2.GetPlayer()
         local playerSquare = player:getCurrentSquare()
         local distanceToWake = tonumber(SandboxVars.BetterZedManager.FakeDeadsWakeupDistance)
         local isnear = BZM_Utils.IsSquareNearSquare(playerSquare,zombieSquare,distanceToWake)

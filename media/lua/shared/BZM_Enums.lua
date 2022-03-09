@@ -1,11 +1,11 @@
 local enums = {
 
-    BZM_OnlineModule = "BZM_OnlineModule",
+    OnlineModule = "BZM_OnlineModule",
 
     CleanMemMethod = {
-        AlwaysClean     = 1,
-        NeverClean      = 2,
-        CleanEveryDay   = 3
+        CleanEveryDay   = 1,
+        CleanSpecified  = 2,
+        NeverClean      = 3
     }, -- mimic enum class lmao
 
     ZombieType = {
