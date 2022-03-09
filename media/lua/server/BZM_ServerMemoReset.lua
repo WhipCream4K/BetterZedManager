@@ -1,3 +1,5 @@
+require("BZM_ZombieMemory")
+
 local serverReset = {}
 
 -- modules stack
@@ -12,17 +14,18 @@ local GetOnlinePlayers  = getOnlinePlayers
 
 serverReset.Reset = function (playerOnlineID,serverMemo,clientMemo)
     
-    local listOfTypes   = {BZM_Enums.Memo.ZombieType,BZM_Enums.Memo.WakeupType}
+    if clientMemo then
+        
+        local listOfTypes   = {BZM_Enums.Memo.ZombieType,BZM_Enums.Memo.WakeupType}
+        BZM_Utils.DebugPrintWithBanner("Resetting Player's ZombieMemo: "..playerOnlineID)
+        serverMemo:UpdateDataPerType(clientMemo,listOfTypes)
 
-    BZM_Utils.DebugPrintWithBanner("Player's ZombieMemo: "..playerOnlineID)
+    end
 
     -- as ArrayList<IsoPlayers>
     local onlinePlayers = GetOnlinePlayers() -- should be fine to call
     local totalOnlinePlayers = onlinePlayers:size()
-
-    BZM_Utils.DebugPrintWithBanner("Total Players: "..totalOnlinePlayers)
-
-    serverMemo:UpdateDataPerType(clientMemo,listOfTypes)
+    BZM_Utils.DebugPrintWithBanner("Total Players: "..totalOnlinePlayers)      
 
     clientCounter = clientCounter + 1
 

@@ -36,7 +36,7 @@ end
 local function SyncWhenEnter()
 
     -- at the first frame we need to sync all previous zombie memory from the server
-    SendClientCMD(BZM_Enums.BZM_OnlineModule,BZM_Commands.SyncServerZombiesIndividual,{})
+    SendClientCMD(BZM_Enums.OnlineModule,BZM_Commands.SyncServerZombiesIndividual,{})
     Events.EveryTenMinutes.Remove(SyncWhenEnter)
     
 end

@@ -7,10 +7,7 @@ local BZM_Enums         = require("BZM_Enums")
 local BZM_Commands      = require("BZM_Commands")
 local BZM_Utils         = require("BZM_Utils")
 local fakeDeadSync      = require("BZM_ClientFakeDeadSync")
--- local sharedData        = require("BZM_ClientSharedData")
--- local zombieQuerier     = require("BZM_ClientQueryZombie")
--- local zombieSync        = require("BZM_ClientZombieSync")
-local sharedData        = require("BZM_ClientSharedData2")
+local sharedData        = require("BZM_ClientSharedData")
 local zombieManger      = require("BZM_ZombieManager")
 
 -- variables stack
@@ -43,7 +40,7 @@ local function ReQueryZombieInCell()
 
     end
     
-    SendClientCMD(sharedData.GetPlayer(),BZM_Commands.ResetServerMemoAnswer,sendZombieMemo)
+    SendClientCMD(sharedData.GetPlayer(),BZM_Enums.OnlineModule,BZM_Commands.ResetServerMemo,sendZombieMemo)
 
 end
 
@@ -86,7 +83,7 @@ local function ServerToClient(module,command,args)
         elseif command == BZM_Commands.ResetClientMemo then
             
             sharedData.zombieMemory = ZombieMemory:New()
-            local serverMemo = ZombieMemory:NewFromTable(args)
+            local serverMemo = ZombieMemory:NewFromTable(args or {})
             sharedData.zombieMemory:UpdateData(serverMemo)
 
         end

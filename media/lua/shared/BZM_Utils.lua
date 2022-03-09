@@ -108,16 +108,18 @@ end
 --     end
 -- end
 
-utils.DebugPrintWithBanner = function (msg,isClient)
+utils.DebugPrintWithBanner = function (msg,c)
 
     if not SandboxVars.BetterZedManager.GenerateDebugInfo then
         return
     end
 
+    c = isClient()
+
     if getDebug() or isServer() then
 
         local side = nil
-        if isClient then
+        if c then
             side = "----- Client -------"
         else   
             side = "---------------------- Server ---------------------------"
@@ -165,7 +167,7 @@ utils.GetPlayerCurrentSquare = function (playerIndex)
 end
 
 utils.SendClientCMD = function (playerIndex,command,args)
-    sendClientCommand(getSpecificPlayer(playerIndex),BZM_Enums.BZM_OnlineModule,command,args)
+    sendClientCommand(getSpecificPlayer(playerIndex),BZM_Enums.OnlineModule,command,args)
 end
 
 utils.GetZombieListFromPlayerIndex = function (playerIndex)

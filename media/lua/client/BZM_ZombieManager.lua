@@ -1,5 +1,3 @@
-require("BZM_ZombieMemory")
-
 local zombieManager = {}
 
 -- moudules stack

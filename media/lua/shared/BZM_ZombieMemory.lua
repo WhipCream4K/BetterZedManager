@@ -108,13 +108,11 @@ end
 function ZombieMemory:UpdateDataPerType(zombieMemory,typesSet)
 
     local anotherZombieData = zombieMemory:GetTable()
-
-    -- local zombieTypeKey =  BZM_Enums.Memo.ZombieType
-    -- local wakeupTypeKey = BZM_Enums.Memo.WakeupType
     
     BZM_Utils.DebugPrintWithBanner("Updating ZombieMemory",true)
-    
+
     for zombieID, dataTable in pairs(anotherZombieData) do
+        
         local ourTable = self.data[zombieID]
 
         if not ourTable then

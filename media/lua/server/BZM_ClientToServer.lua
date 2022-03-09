@@ -6,7 +6,7 @@ local BZM_Commands      = require("BZM_Commands")
 local BZM_Utils         = require("BZM_Utils")
 local BZM_Enums         = require("BZM_Enums")
 local regulator         = require("BZM_ZombieRegulator")
-local randomzier        = require("BZM_ZombiesRandomizer")
+local randomzier        = require("BZM_ZombieRandomizer")
 local memoReset         = require("BZM_ServerMemoReset")
 
 -- variables stack
@@ -85,10 +85,10 @@ local function OnClientToServer(module,command,player,args)
         elseif command == BZM_Commands.SyncFakeDead then
 
             BroadcastSyncFakeDeads(player:getOnlineID(),args)
-            
+
         elseif command == BZM_Commands.ResetServerMemo then
 
-            local clientMemo = ZombieMemory:NewFromTable(args)
+            local clientMemo = ZombieMemory:NewFromTable(args or {})
             if memoReset.Reset(player:getOnlineID(),serverPresistentZombieMemo,clientMemo) then
                 SendServerCMD(BZM_Enums.OnlineModule,BZM_Commands.ResetClientMemo,serverPresistentZombieMemo:GetTable()) -- send raw data version of memo
             end

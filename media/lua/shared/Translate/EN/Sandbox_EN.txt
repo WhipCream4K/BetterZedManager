@@ -31,14 +31,14 @@ Sandbox_EN = {
     Sandbox_BZM_FakeDeadsActiveVolume_tooltip = "How loud should a fake dead wake up to.\nNote that the volume from a sound of this game scales linearly to the radius that the sound makes.\nThe default is 30: The sound of shouting.",
     
     Sandbox_BZM_ZombieMemoryCleaningMethod = "Server Zombie Memory Cleaning Method",
-    Sandbox_BZM_ZombieMemoryCleaningMethod_tooltip = "This is a server side operation.\nSince this mod is a workaround for spawning zombies, it needs memory for run-time checks against old zombies in player cell.\nThese are the methods of cleaning those memory.\nNever Clean: for more memory but less function calls (use with this with caution, I don't really know the overhead of lua table :/ but it would never release the value for the entire game session.\nClean EveryDay: will postpone the cleaning until after the start of each day.",
+    Sandbox_BZM_ZombieMemoryCleaningMethod_tooltip = "This is a server side operation.\nSince this mod is a workaround for spawning zombies, it needs memory for run-time checks against old zombies in player cell.\nThese are the methods of cleaning those memory.\nClean EveryDay: will postpone the cleaning until after the start of each day.\nClean Specified: input the time to be cleaned in minutes. Note: The time of cleaning must not be equal to the \"Respawn Frequency\" otherwise things blows up.\nNever Clean: use with this with caution, I don't really know the overhead of lua table :/ but it would never release the value for the entire game session.",
     Sandbox_BZM_CleaningMethod_option1 = "Clean EveryDay",
     Sandbox_BZM_CleaningMethod_option2 = "Clean Specified",
     Sandbox_BZM_CleaningMethod_option3 = "Never Clean",
+
     Sandbox_BZM_CleanTime = "Clean Time",
     Sandbox_BZM_CleanTime_tooltip = "Clean time if \"Clean Specified\" was used.",
 
     
-
     Sandbox_BZM_GenerateDebugInfo = "Generate Debug Info"
 }

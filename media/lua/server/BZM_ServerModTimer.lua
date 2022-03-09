@@ -20,26 +20,33 @@ local isModDisable          = false
 local GetGameTime           = getGameTime
 local SendServerCMD         = sendServerCommand
 
-
 local function CallRespawn()
+    SendServerCMD(BZM_Enums.OnlineModule,BZM_Commands.QueryClientZombies,{})
+end
+
+local function CountToRespawn()
 
     rerollCounterInMins = rerollCounterInMins + 1
 
     if(rerollCounterInMins >= rerollLimitInMins) then
-        SendServerCMD(BZM_Enums.BZM_OnlineModule,BZM_Commands.QueryClientZombies,{})
         rerollCounterInMins = 0
+        CallRespawn()
     end
 
 end
 
 local function CallReset()
+    SendServerCMD(BZM_Enums.OnlineModule,BZM_Commands.ResetServerMemo,{})
+end
+
+local function CountToReset()
     
     resetCounterInMins = resetCounterInMins + 1
 
     if(resetCounterInMins >= resetLimitInMins) then
         ResetServerMemo()
-        SendServerCMD(BZM_Enums.BZM_OnlineModule,BZM_Commands.ResetServerMemo,{})
         resetCounterInMins = 0
+        CallReset()
     end
 
 end
@@ -48,11 +55,11 @@ local function SetActiveMod(value)
     if value then
         rerollCounterInMins = 0
         resetCounterInMins = 0
-        rerollEvent.Remove(CallRespawn)
-        resetEvent.Remove(CallReset)
+        rerollEvent.Remove(CountToRespawn)
+        resetEvent.Remove(CountToReset)
     else
-        rerollEvent.Add(CallRespawn)
-        resetEvent.Add(CallReset)
+        rerollEvent.Add(CountToRespawn)
+        resetEvent.Add(CountToReset)
     end
 end
 
@@ -104,12 +111,31 @@ local function InitVariables()
 
     if rerollLimitInMins > 0 then
         rerollEvent = Events.EveryOneMinute
-        rerollEvent.Add(CallRespawn)
+        rerollEvent.Add(CountToRespawn)
     end
 
     if currentSandbox.ZombieMemoryCleaningMethod == BZM_Enums.CleanMemMethod.CleanSpecified then
+
+        local respawnTime = currentSandbox.RespawnTimeInMinutes
+        local cleanTime = currentSandbox.CleanTime
+        local remainder = 0
+
+        if cleanTime > respawnTime then
+            remainder = cleanTime % respawnTime
+        else
+            remainder = respawnTime % cleanTime
+        end
+
+        -- offset the clean time so that it's not trigger at the same time slot
+        if remainder == 0 then
+            remainder = 3
+        else
+            remainder = 0
+        end
+
         resetEvent = Events.EveryOneMinute
-        resetEvent.Add(CallReset)
+        resetLimitInMins = cleanTime + remainder
+        resetEvent.Add(CountToReset)
     elseif currentSandbox.ZombieMemoryCleaningMethod == BZM_Enums.CleanMemMethod.CleanEveryDay then
         resetEvent = Events.EveryDays
         resetEvent.Add(CallReset)

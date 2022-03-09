@@ -4,7 +4,7 @@
 local fakeDeadUpdate        = require("BZM_ClientFakeDeadUpdate")
 local BZM_Utils             = require("BZM_Utils")
 -- local sharedData            = require("BZM_ClientSharedData")
-local sharedData            = require("BZM_ClientSharedData2")
+local sharedData            = require("BZM_ClientSharedData")
 local zombieManager         = require("BZM_ZombieManager")
 local BZM_Enums             = require("BZM_Enums")
 
